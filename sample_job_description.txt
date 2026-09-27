@@ -1,0 +1,1 @@
+We are looking for a Python developer with Flask, SQL, REST APIs, Docker, and Agile experience. Candidate should have leadership, communication, and project management skills.

@@ -1,11 +1,15 @@
 import os
+import tempfile
 from pathlib import Path
 
 from flask import Flask, Response, render_template_string, request
+from werkzeug.utils import secure_filename
 
 from resume_analyzer import extract_text_from_file, score_resume
 
 app = Flask(__name__)
+app.config["MAX_CONTENT_LENGTH"] = 5 * 1024 * 1024
+ALLOWED_RESUME_EXTENSIONS = {".txt", ".md", ".pdf", ".docx"}
 
 
 def build_report(resume_text: str, job_text: str):
@@ -113,6 +117,11 @@ HTML = """
         color: var(--text);
         outline: none;
       }
+      textarea:focus-visible, input[type="file"]:focus-visible, button:focus-visible {
+        outline: 2px solid #38bdf8;
+        outline-offset: 3px;
+      }
+      small { display: block; margin-top: 8px; color: var(--muted); }
       textarea {
         min-height: 180px;
         resize: vertical;
@@ -209,25 +218,26 @@ HTML = """
       <div class="hero">
         <div>
           <h1>Resume Analyzer</h1>
-          <div class="subtitle">AI-style match scoring for resumes and job descriptions</div>
+          <div class="subtitle">Heuristic skill matching for resumes and job descriptions</div>
         </div>
       </div>
 
       <div class="panel panel-glow">
         <form method="post" enctype="multipart/form-data">
           <div>
-            <label>Upload resume file</label>
-            <input type="file" name="resume_file" accept=".txt,.md,.rtf,.pdf,.doc,.docx">
+            <label for="resume_file">Upload resume file</label>
+            <input id="resume_file" type="file" name="resume_file" accept=".txt,.md,.pdf,.docx" aria-describedby="upload-help">
+            <small id="upload-help">TXT, MD, PDF, or DOCX up to 5 MB. Scanned PDFs require OCR and may not extract text.</small>
           </div>
 
           <div>
-            <label>Resume text</label>
-            <textarea name="resume" rows="10" placeholder="Paste resume content here">{{ resume_text }}</textarea>
+            <label for="resume">Resume text</label>
+            <textarea id="resume" name="resume" rows="10" placeholder="Paste resume content here">{{ resume_text }}</textarea>
           </div>
 
           <div>
-            <label>Job description</label>
-            <textarea name="job" rows="10" placeholder="Paste job description here">{{ job_text }}</textarea>
+            <label for="job">Job description</label>
+            <textarea id="job" name="job" rows="10" placeholder="Paste job description here">{{ job_text }}</textarea>
           </div>
 
           <div class="actions">
@@ -239,6 +249,7 @@ HTML = """
       {% if result %}
         <div class="result panel panel-glow">
           <div class="score">{{ result.score }}%</div>
+          <p>Estimated keyword coverage only; review candidates using job-relevant criteria.</p>
           <div class="badge">{{ result.recommendation }}</div>
           <div class="meta">
             <span>Coverage: {{ result.coverage }}</span>
@@ -267,7 +278,11 @@ HTML = """
           </div>
 
           <div class="actions" style="margin-top: 20px;">
-            <a class="download-btn" href="/download-report?resume={{ resume_text|urlencode }}&job={{ job_text|urlencode }}">Download report</a>
+            <form method="post" action="/download-report">
+              <input type="hidden" name="resume" value="{{ resume_text }}">
+              <input type="hidden" name="job" value="{{ job_text }}">
+              <button class="download-btn" type="submit">Download report</button>
+            </form>
           </div>
         </div>
       {% endif %}
@@ -291,16 +306,26 @@ def index():
     if request.method == 'POST':
         uploaded_file = request.files.get('resume_file')
         if uploaded_file and uploaded_file.filename:
-            temp_path = Path('tmp_resume_upload')
-            temp_path.parent.mkdir(exist_ok=True)
-            uploaded_file.save(temp_path)
-            try:
-                resume_text = extract_text_from_file(temp_path)
-            except Exception as exc:
-                error = f"Unable to read uploaded file: {exc}"
-                resume_text = ""
+            filename = secure_filename(uploaded_file.filename)
+            extension = Path(filename).suffix.lower()
+            if extension not in ALLOWED_RESUME_EXTENSIONS:
+                error = "Unsupported file type. Upload a TXT, MD, PDF, or DOCX file."
+            else:
+                temp_path = None
+                try:
+                    with tempfile.NamedTemporaryFile(suffix=extension, delete=False) as temp_file:
+                        temp_path = Path(temp_file.name)
+                    uploaded_file.save(temp_path)
+                    resume_text = extract_text_from_file(temp_path)
+                except Exception:
+                    error = "Unable to read this resume file. Check that it is a valid, text-based document."
+                    resume_text = ""
+                finally:
+                    if temp_path is not None:
+                        temp_path.unlink(missing_ok=True)
 
-        resume_text = request.form.get('resume', resume_text)
+        if pasted_resume := request.form.get('resume', '').strip():
+            resume_text = pasted_resume
         job_text = request.form.get('job', '')
 
         if resume_text and job_text:
@@ -314,6 +339,8 @@ def index():
                 "missing_count": len(summary["missing_skills"]),
                 "recommendation": "Strong match" if score >= 80 else "Good potential" if score >= 60 else "Needs improvement",
             }
+        elif not error:
+            error = "Provide resume text or upload a resume, and enter a job description."
 
     return render_template_string(
         HTML,
@@ -324,10 +351,10 @@ def index():
     )
 
 
-@app.route('/download-report')
+@app.route('/download-report', methods=['POST'])
 def download_report():
-    resume_text = request.args.get('resume', '')
-    job_text = request.args.get('job', '')
+    resume_text = request.form.get('resume', '')
+    job_text = request.form.get('job', '')
     if not resume_text or not job_text:
         return Response("Missing resume or job description.", status=400)
 
@@ -335,8 +362,16 @@ def download_report():
     return Response(
         report,
         mimetype='text/plain',
-        headers={'Content-Disposition': 'attachment; filename=resume_analysis_report.txt'}
+        headers={
+            'Content-Disposition': 'attachment; filename=resume_analysis_report.txt',
+            'Cache-Control': 'no-store',
+        },
     )
+
+
+@app.errorhandler(413)
+def upload_too_large(_error):
+    return Response("Upload is too large. The maximum request size is 5 MB.", status=413)
 
 
 if __name__ == '__main__':

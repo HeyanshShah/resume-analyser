@@ -13,6 +13,15 @@ def test_extract_keywords_keeps_relevant_terms():
     assert "leadership" in keywords
 
 
+def test_extract_keywords_matches_skill_boundaries_and_api_plural():
+    keywords = extract_keywords("NoSQL systems and REST APIs")
+
+    assert "sql" not in keywords
+    assert "rest" in keywords
+    assert "api" in keywords
+    assert "apis" not in keywords
+
+
 def test_score_resume_returns_high_match_for_relevant_resume():
     job_description = "Looking for Python developer with Flask, SQL, REST APIs, Docker, and Agile experience"
     resume_text = "Experienced Python developer with Flask services, SQL querying, REST APIs, Docker deployment, and Agile delivery."

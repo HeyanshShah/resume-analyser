@@ -1,6 +1,8 @@
 # Resume Analyzer
 
-A portfolio-ready ATS-style resume matching tool that compares a candidate resume against a job description and highlights skill alignment, gaps, and overall fit score.
+A portfolio-ready resume matching tool that compares a resume against a job description and highlights skill alignment, gaps, and estimated keyword coverage.
+
+The score is a transparent keyword-based heuristic, not an AI model or an automated hiring decision. Scanned PDFs require OCR and may not yield extractable text.
 
 ## Project Overview
 

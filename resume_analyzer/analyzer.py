@@ -51,23 +51,19 @@ COMMON_SKILLS = {
 def normalize_text(text: str) -> str:
     text = (text or "").lower()
     text = re.sub(r"[^a-z0-9#+\s]", " ", text)
+    text = re.sub(r"\bapis\b", "api", text)
     text = re.sub(r"\s+", " ", text).strip()
     return text
 
 
 def extract_keywords(text: str):
     normalized = normalize_text(text)
-    words = normalized.split()
-    filtered = []
-
-    for word in words:
-        if len(word) <= 2:
-            continue
-        filtered.append(word)
+    filtered = [word for word in normalized.split() if len(word) > 2]
 
     terms = []
     for skill in sorted(COMMON_SKILLS, key=len, reverse=True):
-        if skill in normalized:
+        pattern = rf"(?<![a-z0-9]){re.escape(skill)}(?![a-z0-9])"
+        if re.search(pattern, normalized):
             terms.append(skill)
 
     counter = Counter(filtered)
@@ -77,7 +73,7 @@ def extract_keywords(text: str):
         if term not in terms and len(term) > 3:
             terms.append(term)
 
-    return terms[:12]
+    return list(dict.fromkeys(terms))
 
 
 def extract_text_from_file(file_path):

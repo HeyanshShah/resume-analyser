@@ -1,0 +1,837 @@
+{
+ "Python": {
+  "family": "language",
+  "aliases": [
+   "py",
+   "python3"
+  ]
+ },
+ "Java": {
+  "family": "language",
+  "aliases": []
+ },
+ "JavaScript": {
+  "family": "language",
+  "aliases": [
+   "js",
+   "ecmascript",
+   "es6"
+  ]
+ },
+ "TypeScript": {
+  "family": "language",
+  "aliases": [
+   "ts"
+  ]
+ },
+ "C": {
+  "family": "language",
+  "aliases": []
+ },
+ "C++": {
+  "family": "language",
+  "aliases": [
+   "cpp",
+   "c plus plus"
+  ]
+ },
+ "C#": {
+  "family": "language",
+  "aliases": [
+   "c sharp",
+   "csharp",
+   ".net c#"
+  ]
+ },
+ "Go": {
+  "family": "language",
+  "aliases": [
+   "golang"
+  ]
+ },
+ "Rust": {
+  "family": "language",
+  "aliases": []
+ },
+ "Kotlin": {
+  "family": "language",
+  "aliases": []
+ },
+ "Swift": {
+  "family": "language",
+  "aliases": []
+ },
+ "R": {
+  "family": "language",
+  "aliases": []
+ },
+ "Scala": {
+  "family": "language",
+  "aliases": []
+ },
+ "Ruby": {
+  "family": "language",
+  "aliases": []
+ },
+ "PHP": {
+  "family": "language",
+  "aliases": []
+ },
+ "Bash": {
+  "family": "language",
+  "aliases": [
+   "shell scripting",
+   "shell script",
+   "bash scripting"
+  ]
+ },
+ "PowerShell": {
+  "family": "language",
+  "aliases": [
+   "powershell scripting"
+  ]
+ },
+ "SQL": {
+  "family": "language",
+  "aliases": [
+   "structured query language",
+   "t-sql",
+   "pl/sql"
+  ]
+ },
+ "HTML": {
+  "family": "language",
+  "aliases": [
+   "html5"
+  ]
+ },
+ "CSS": {
+  "family": "language",
+  "aliases": [
+   "css3"
+  ]
+ },
+ "MATLAB": {
+  "family": "language",
+  "aliases": []
+ },
+ "React": {
+  "family": "frontend",
+  "aliases": [
+   "react.js",
+   "reactjs"
+  ]
+ },
+ "React Native": {
+  "family": "frontend",
+  "aliases": []
+ },
+ "Angular": {
+  "family": "frontend",
+  "aliases": [
+   "angularjs"
+  ]
+ },
+ "Vue": {
+  "family": "frontend",
+  "aliases": [
+   "vue.js",
+   "vuejs"
+  ]
+ },
+ "Next.js": {
+  "family": "frontend",
+  "aliases": [
+   "nextjs"
+  ]
+ },
+ "Tailwind CSS": {
+  "family": "frontend",
+  "aliases": [
+   "tailwind"
+  ]
+ },
+ "Redux": {
+  "family": "frontend",
+  "aliases": []
+ },
+ "Node.js": {
+  "family": "backend",
+  "aliases": [
+   "node",
+   "nodejs"
+  ]
+ },
+ "Express": {
+  "family": "backend",
+  "aliases": [
+   "express.js",
+   "expressjs"
+  ]
+ },
+ "Django": {
+  "family": "backend",
+  "aliases": []
+ },
+ "Flask": {
+  "family": "backend",
+  "aliases": []
+ },
+ "FastAPI": {
+  "family": "backend",
+  "aliases": []
+ },
+ "Spring Boot": {
+  "family": "backend",
+  "aliases": [
+   "spring"
+  ]
+ },
+ "REST APIs": {
+  "family": "backend",
+  "aliases": [
+   "rest api",
+   "restful api",
+   "restful apis",
+   "rest",
+   "restful services"
+  ]
+ },
+ "GraphQL": {
+  "family": "backend",
+  "aliases": []
+ },
+ "Microservices": {
+  "family": "backend",
+  "aliases": [
+   "microservice architecture"
+  ]
+ },
+ "PostgreSQL": {
+  "family": "relational database",
+  "aliases": [
+   "postgres",
+   "psql"
+  ]
+ },
+ "MySQL": {
+  "family": "relational database",
+  "aliases": []
+ },
+ "SQLite": {
+  "family": "relational database",
+  "aliases": []
+ },
+ "SQL Server": {
+  "family": "relational database",
+  "aliases": [
+   "mssql",
+   "microsoft sql server"
+  ]
+ },
+ "Oracle Database": {
+  "family": "relational database",
+  "aliases": [
+   "oracle db"
+  ]
+ },
+ "MongoDB": {
+  "family": "nosql database",
+  "aliases": [
+   "mongo"
+  ]
+ },
+ "Redis": {
+  "family": "nosql database",
+  "aliases": []
+ },
+ "DynamoDB": {
+  "family": "nosql database",
+  "aliases": []
+ },
+ "Cassandra": {
+  "family": "nosql database",
+  "aliases": []
+ },
+ "NoSQL": {
+  "family": "nosql database",
+  "aliases": []
+ },
+ "Firebase": {
+  "family": "nosql database",
+  "aliases": [
+   "firestore"
+  ]
+ },
+ "Pandas": {
+  "family": "data",
+  "aliases": []
+ },
+ "NumPy": {
+  "family": "data",
+  "aliases": []
+ },
+ "Excel": {
+  "family": "data",
+  "aliases": [
+   "microsoft excel",
+   "advanced excel",
+   "spreadsheets"
+  ]
+ },
+ "Tableau": {
+  "family": "bi tool",
+  "aliases": []
+ },
+ "Power BI": {
+  "family": "bi tool",
+  "aliases": [
+   "powerbi"
+  ]
+ },
+ "data analysis": {
+  "family": "data",
+  "aliases": [
+   "data analytics",
+   "analyze data",
+   "analyzing data"
+  ]
+ },
+ "data visualization": {
+  "family": "data",
+  "aliases": [
+   "dashboards",
+   "dashboarding",
+   "visualizations"
+  ]
+ },
+ "ETL": {
+  "family": "data",
+  "aliases": [
+   "extract transform load",
+   "data pipelines",
+   "data pipeline"
+  ]
+ },
+ "statistics": {
+  "family": "data",
+  "aliases": [
+   "statistical analysis"
+  ]
+ },
+ "Spark": {
+  "family": "data",
+  "aliases": [
+   "apache spark",
+   "pyspark"
+  ]
+ },
+ "Snowflake": {
+  "family": "data",
+  "aliases": []
+ },
+ "Airflow": {
+  "family": "data",
+  "aliases": [
+   "apache airflow"
+  ]
+ },
+ "Looker": {
+  "family": "bi tool",
+  "aliases": []
+ },
+ "machine learning": {
+  "family": "ml",
+  "aliases": [
+   "ml"
+  ]
+ },
+ "deep learning": {
+  "family": "ml",
+  "aliases": [
+   "neural networks"
+  ]
+ },
+ "natural language processing": {
+  "family": "ml",
+  "aliases": [
+   "nlp"
+  ]
+ },
+ "computer vision": {
+  "family": "ml",
+  "aliases": [
+   "cv"
+  ]
+ },
+ "scikit-learn": {
+  "family": "ml framework",
+  "aliases": [
+   "sklearn",
+   "scikit learn"
+  ]
+ },
+ "TensorFlow": {
+  "family": "ml framework",
+  "aliases": []
+ },
+ "PyTorch": {
+  "family": "ml framework",
+  "aliases": [
+   "torch"
+  ]
+ },
+ "Hugging Face": {
+  "family": "ml",
+  "aliases": [
+   "huggingface",
+   "transformers library"
+  ]
+ },
+ "spaCy": {
+  "family": "ml",
+  "aliases": []
+ },
+ "NLTK": {
+  "family": "ml",
+  "aliases": []
+ },
+ "large language models": {
+  "family": "ml",
+  "aliases": [
+   "llm",
+   "llms",
+   "large language model"
+  ]
+ },
+ "generative AI": {
+  "family": "ml",
+  "aliases": [
+   "genai",
+   "gen ai"
+  ]
+ },
+ "prompt engineering": {
+  "family": "ml",
+  "aliases": []
+ },
+ "embeddings": {
+  "family": "ml",
+  "aliases": [
+   "vector embeddings",
+   "sentence embeddings"
+  ]
+ },
+ "RAG": {
+  "family": "ml",
+  "aliases": [
+   "retrieval augmented generation",
+   "retrieval-augmented generation"
+  ]
+ },
+ "OpenAI API": {
+  "family": "ml",
+  "aliases": [
+   "gpt api"
+  ]
+ },
+ "Claude": {
+  "family": "ml",
+  "aliases": [
+   "anthropic api"
+  ]
+ },
+ "MLOps": {
+  "family": "ml",
+  "aliases": []
+ },
+ "AWS": {
+  "family": "cloud provider",
+  "aliases": [
+   "amazon web services",
+   "ec2",
+   "s3",
+   "lambda"
+  ]
+ },
+ "Azure": {
+  "family": "cloud provider",
+  "aliases": [
+   "microsoft azure"
+  ]
+ },
+ "Google Cloud": {
+  "family": "cloud provider",
+  "aliases": [
+   "gcp",
+   "google cloud platform"
+  ]
+ },
+ "Docker": {
+  "family": "cloud",
+  "aliases": [
+   "containers",
+   "containerization"
+  ]
+ },
+ "Kubernetes": {
+  "family": "cloud",
+  "aliases": [
+   "k8s"
+  ]
+ },
+ "Terraform": {
+  "family": "cloud",
+  "aliases": [
+   "infrastructure as code",
+   "iac"
+  ]
+ },
+ "CI/CD": {
+  "family": "ci tool",
+  "aliases": [
+   "continuous integration",
+   "continuous deployment",
+   "ci cd",
+   "ci/cd pipelines"
+  ]
+ },
+ "GitHub Actions": {
+  "family": "ci tool",
+  "aliases": []
+ },
+ "Jenkins": {
+  "family": "ci tool",
+  "aliases": []
+ },
+ "Linux": {
+  "family": "cloud",
+  "aliases": [
+   "unix",
+   "ubuntu",
+   "red hat",
+   "rhel",
+   "centos"
+  ]
+ },
+ "Git": {
+  "family": "tools",
+  "aliases": [
+   "version control"
+  ]
+ },
+ "GitHub": {
+  "family": "tools",
+  "aliases": []
+ },
+ "Jira": {
+  "family": "itsm tool",
+  "aliases": []
+ },
+ "Confluence": {
+  "family": "tools",
+  "aliases": []
+ },
+ "VS Code": {
+  "family": "tools",
+  "aliases": [
+   "visual studio code"
+  ]
+ },
+ "Postman": {
+  "family": "tools",
+  "aliases": []
+ },
+ "Active Directory": {
+  "family": "it support",
+  "aliases": [
+   "entra id",
+   "azure ad",
+   "azure active directory"
+  ]
+ },
+ "Microsoft 365": {
+  "family": "it support",
+  "aliases": [
+   "office 365",
+   "o365",
+   "m365",
+   "microsoft office"
+  ]
+ },
+ "Intune": {
+  "family": "mdm",
+  "aliases": [
+   "microsoft intune"
+  ]
+ },
+ "Jamf": {
+  "family": "mdm",
+  "aliases": []
+ },
+ "ServiceNow": {
+  "family": "itsm tool",
+  "aliases": []
+ },
+ "Zendesk": {
+  "family": "itsm tool",
+  "aliases": []
+ },
+ "ITIL": {
+  "family": "it support",
+  "aliases": []
+ },
+ "help desk": {
+  "family": "it support",
+  "aliases": [
+   "helpdesk",
+   "service desk",
+   "technical support",
+   "tech support",
+   "it support"
+  ]
+ },
+ "troubleshooting": {
+  "family": "it support",
+  "aliases": [
+   "troubleshoot",
+   "diagnose",
+   "diagnosing"
+  ]
+ },
+ "ticketing": {
+  "family": "it support",
+  "aliases": [
+   "ticketing system",
+   "ticket management",
+   "itsm"
+  ]
+ },
+ "Windows": {
+  "family": "it support",
+  "aliases": [
+   "windows 10",
+   "windows 11",
+   "windows os"
+  ]
+ },
+ "macOS": {
+  "family": "it support",
+  "aliases": [
+   "mac os",
+   "osx"
+  ]
+ },
+ "hardware": {
+  "family": "it support",
+  "aliases": [
+   "hardware support"
+  ]
+ },
+ "imaging": {
+  "family": "it support",
+  "aliases": [
+   "device imaging",
+   "os imaging"
+  ]
+ },
+ "TCP/IP": {
+  "family": "networking",
+  "aliases": [
+   "tcp ip"
+  ]
+ },
+ "DNS": {
+  "family": "networking",
+  "aliases": []
+ },
+ "DHCP": {
+  "family": "networking",
+  "aliases": []
+ },
+ "VPN": {
+  "family": "networking",
+  "aliases": []
+ },
+ "LAN/WAN": {
+  "family": "networking",
+  "aliases": [
+   "lan",
+   "wan"
+  ]
+ },
+ "networking": {
+  "family": "networking",
+  "aliases": [
+   "network fundamentals",
+   "computer networks"
+  ]
+ },
+ "firewalls": {
+  "family": "networking",
+  "aliases": [
+   "firewall"
+  ]
+ },
+ "cybersecurity": {
+  "family": "security",
+  "aliases": [
+   "information security",
+   "infosec",
+   "security"
+  ]
+ },
+ "MFA": {
+  "family": "security",
+  "aliases": [
+   "multi-factor authentication",
+   "2fa",
+   "two-factor authentication"
+  ]
+ },
+ "SIEM": {
+  "family": "security",
+  "aliases": [
+   "splunk",
+   "microsoft sentinel"
+  ]
+ },
+ "vulnerability management": {
+  "family": "security",
+  "aliases": [
+   "vulnerability scanning"
+  ]
+ },
+ "IAM": {
+  "family": "security",
+  "aliases": [
+   "identity and access management",
+   "access management"
+  ]
+ },
+ "OAuth": {
+  "family": "security",
+  "aliases": [
+   "oauth2",
+   "sso",
+   "single sign-on"
+  ]
+ },
+ "JWT": {
+  "family": "security",
+  "aliases": [
+   "json web tokens"
+  ]
+ },
+ "encryption": {
+  "family": "security",
+  "aliases": []
+ },
+ "unit testing": {
+  "family": "testing",
+  "aliases": [
+   "unit tests"
+  ]
+ },
+ "pytest": {
+  "family": "testing",
+  "aliases": []
+ },
+ "Jest": {
+  "family": "testing",
+  "aliases": []
+ },
+ "Selenium": {
+  "family": "testing",
+  "aliases": []
+ },
+ "test automation": {
+  "family": "testing",
+  "aliases": [
+   "automated testing"
+  ]
+ },
+ "Agile": {
+  "family": "practice",
+  "aliases": [
+   "agile methodology"
+  ]
+ },
+ "Scrum": {
+  "family": "practice",
+  "aliases": []
+ },
+ "object-oriented programming": {
+  "family": "practice",
+  "aliases": [
+   "oop",
+   "object oriented programming",
+   "object-oriented design"
+  ]
+ },
+ "data structures": {
+  "family": "practice",
+  "aliases": []
+ },
+ "algorithms": {
+  "family": "practice",
+  "aliases": []
+ },
+ "system design": {
+  "family": "practice",
+  "aliases": []
+ },
+ "debugging": {
+  "family": "practice",
+  "aliases": []
+ },
+ "communication": {
+  "family": "soft",
+  "aliases": [
+   "communicate",
+   "communication skills"
+  ]
+ },
+ "teamwork": {
+  "family": "soft",
+  "aliases": [
+   "collaboration",
+   "collaborate",
+   "cross-functional"
+  ]
+ },
+ "leadership": {
+  "family": "soft",
+  "aliases": [
+   "led",
+   "mentored"
+  ]
+ },
+ "problem solving": {
+  "family": "soft",
+  "aliases": [
+   "problem-solving"
+  ]
+ },
+ "customer service": {
+  "family": "soft",
+  "aliases": [
+   "customer support",
+   "client support",
+   "end users",
+   "end-user support"
+  ]
+ },
+ "documentation": {
+  "family": "soft",
+  "aliases": [
+   "technical documentation",
+   "knowledge base",
+   "documented"
+  ]
+ },
+ "time management": {
+  "family": "soft",
+  "aliases": []
+ }
+}

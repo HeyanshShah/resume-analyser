@@ -1,7 +1,11 @@
 streamlit>=1.36
 pdfminer.six>=20231228
+python-docx>=1.1
 spacy>=3.7
 scikit-learn>=1.4
 numpy>=1.26
+pandas>=2.1
+matplotlib>=3.8
 sentence-transformers>=2.7
 pytest>=8.0
+# optional, for AI rewrites:  pip install anthropic  and set ANTHROPIC_API_KEY

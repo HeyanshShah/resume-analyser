@@ -1,0 +1,50 @@
+{"text": "Resolved 40+ help desk tickets per week across Windows and macOS devices.", "passive": false, "weak": false, "quantified": true}
+{"text": "Tickets were resolved within the SLA by the support team.", "passive": true, "weak": true, "quantified": false}
+{"text": "Responsible for maintaining the company website.", "passive": false, "weak": true, "quantified": false}
+{"text": "Helped customers reset their passwords.", "passive": false, "weak": true, "quantified": false}
+{"text": "Built a React dashboard used by 300 students to track assignments.", "passive": false, "weak": false, "quantified": true}
+{"text": "The database schema was designed to support 10,000 users.", "passive": true, "weak": true, "quantified": true}
+{"text": "Worked on various projects with the engineering team.", "passive": false, "weak": true, "quantified": false}
+{"text": "Automated weekly reporting with Python, saving 5 hours per week.", "passive": false, "weak": false, "quantified": true}
+{"text": "Led a team of four students to deliver a mobile app in eight weeks.", "passive": false, "weak": false, "quantified": true}
+{"text": "Assisted with onboarding new employees.", "passive": false, "weak": true, "quantified": false}
+{"text": "Reduced page load time by 40% by optimizing SQL queries.", "passive": false, "weak": false, "quantified": true}
+{"text": "Was tasked with updating documentation for the API.", "passive": true, "weak": true, "quantified": false}
+{"text": "Migrated 25 legacy servers to AWS with zero downtime.", "passive": false, "weak": false, "quantified": true}
+{"text": "In charge of the social media accounts for the club.", "passive": false, "weak": true, "quantified": false}
+{"text": "Designed and deployed a REST API in Flask.", "passive": false, "weak": false, "quantified": false}
+{"text": "Laptops were imaged and configured for new hires.", "passive": true, "weak": true, "quantified": false}
+{"text": "Implemented JWT authentication for the login flow.", "passive": false, "weak": false, "quantified": false}
+{"text": "I developed a machine learning model to predict churn.", "passive": false, "weak": true, "quantified": false}
+{"text": "Analyzed survey data from 1,200 respondents using pandas.", "passive": false, "weak": false, "quantified": true}
+{"text": "Participated in weekly scrum meetings.", "passive": false, "weak": true, "quantified": false}
+{"text": "Configured Intune policies for 150 company laptops.", "passive": false, "weak": false, "quantified": true}
+{"text": "The network outage was diagnosed and fixed within two hours.", "passive": true, "weak": true, "quantified": true}
+{"text": "Made a website for a local business.", "passive": false, "weak": true, "quantified": false}
+{"text": "Streamlined the ticket triage process, cutting response time in half.", "passive": false, "weak": false, "quantified": true}
+{"text": "Handled customer complaints over the phone.", "passive": false, "weak": true, "quantified": false}
+{"text": "Trained 12 new student assistants on ServiceNow workflows.", "passive": false, "weak": false, "quantified": true}
+{"text": "Reports are generated every Monday for management.", "passive": true, "weak": true, "quantified": false}
+{"text": "Developed unit tests with pytest, raising coverage to 85%.", "passive": false, "weak": false, "quantified": true}
+{"text": "Used Excel to track inventory.", "passive": false, "weak": true, "quantified": false}
+{"text": "Architected a microservices backend handling 1M requests per day.", "passive": false, "weak": false, "quantified": true}
+{"text": "Involved in the migration to Microsoft 365.", "passive": false, "weak": true, "quantified": false}
+{"text": "Presented findings to a panel of three faculty members.", "passive": false, "weak": false, "quantified": true}
+{"text": "Was given the award for best project in the hackathon.", "passive": true, "weak": true, "quantified": false}
+{"text": "Troubleshot network connectivity issues across a 20-building campus.", "passive": false, "weak": false, "quantified": true}
+{"text": "Did data entry for the finance department.", "passive": false, "weak": true, "quantified": false}
+{"text": "Wrote technical documentation for internal tools.", "passive": false, "weak": false, "quantified": false}
+{"text": "Code reviews were performed for every pull request.", "passive": true, "weak": true, "quantified": false}
+{"text": "Spearheaded a recycling initiative adopted by five dorms.", "passive": false, "weak": false, "quantified": true}
+{"text": "Duties included answering phones and filing paperwork.", "passive": false, "weak": true, "quantified": false}
+{"text": "Optimized Docker images, shrinking build size by 60%.", "passive": false, "weak": false, "quantified": true}
+{"text": "Collaborated with designers to ship three app features.", "passive": false, "weak": false, "quantified": true}
+{"text": "The model was trained on 50,000 labeled images.", "passive": true, "weak": true, "quantified": true}
+{"text": "Got certified in CompTIA A+.", "passive": true, "weak": true, "quantified": false}
+{"text": "Provisioned Active Directory accounts for incoming staff.", "passive": false, "weak": false, "quantified": false}
+{"text": "Our team won second place at the regional hackathon.", "passive": false, "weak": true, "quantified": true}
+{"text": "Monitored server health using Grafana dashboards.", "passive": false, "weak": false, "quantified": false}
+{"text": "Software was installed on lab computers each semester.", "passive": true, "weak": true, "quantified": false}
+{"text": "Mentored three first-year students in Python.", "passive": false, "weak": false, "quantified": true}
+{"text": "Tasked with cleaning the dataset before analysis.", "passive": false, "weak": true, "quantified": false}
+{"text": "Debugged a memory leak that crashed the app twice daily.", "passive": false, "weak": false, "quantified": true}

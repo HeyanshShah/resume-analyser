@@ -1,0 +1,17 @@
+name: tests
+on: [push, pull_request]
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      # CI skips the 400 MB embedding model; the analyzer falls back to TF-IDF.
+      - run: pip install -r requirements-deploy.txt
+      - run: python -m spacy download en_core_web_sm
+      - run: pytest -q
+      - name: Linguistic detector accuracy (held-out set)
+        run: python eval/evaluate_bullets.py test >> "$GITHUB_STEP_SUMMARY"

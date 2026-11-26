@@ -1,117 +1,84 @@
-"""Step 2: pull out the keywords an ATS (applicant tracking system) looks for.
+"""Step 2: skills matching that understands synonyms, word forms, and importance.
 
-Two sources of keywords:
-  1. A curated skills dictionary (skills.txt), matched with spaCy's PhraseMatcher,
-     so "Node.js", "machine learning", "Active Directory" are caught as one term.
-  2. spaCy noun chunks and named entities from the job description, which catch
-     role-specific terms that aren't in the dictionary (e.g. "ticket triage").
+* Ontology (ontology.json): ~140 canonical skills, each with aliases and a family.
+  "JS" -> JavaScript, "k8s" -> Kubernetes, "Postgres" -> PostgreSQL, "helpdesk" -> help desk.
+* Lemma matching: "troubleshooting", "troubleshot" and "troubleshoot" all match.
+* Short/ambiguous names ("Go", "R", "C") are matched case-sensitively, so the verb
+  "go" isn't mistaken for the Go language.
+* Partial credit: if the job wants MySQL and you list PostgreSQL (same family:
+  relational database), that's half a match instead of zero.
 """
 from functools import lru_cache
+import json
 from pathlib import Path
-import re
 
-import spacy
 from spacy.matcher import PhraseMatcher
 
-SKILLS_FILE = Path(__file__).with_name("skills.txt")
+from .nlp import get_nlp
+from .requirements import skill_weights
 
-# Words that show up in every job post but are not skills.
-GENERIC = {
-    "experience", "ability", "team", "work", "role", "candidate", "company", "years",
-    "skills", "knowledge", "position", "opportunity", "responsibilities", "requirements",
-    "student", "students", "you", "we", "they", "it", "this", "that", "who", "what",
-    "the ability", "a variety", "our team", "the role", "internship", "intern", "job",
-    "benefits", "salary", "location", "equal opportunity", "employer", "plus", "bonus",
-    "degree", "summer", "field", "fields", "related field", "employees", "software",
-    "hardware", "requirements", "responsibilities", "tasks", "issues", "users", "people",
-    "day", "time", "year", "month", "week", "hours", "office", "teams", "member",
-}
+ONTOLOGY = json.loads(Path(__file__).with_name("ontology.json").read_text())
+CASE_SENSITIVE = {"Go", "R", "C", "Swift", "Express", "Spark", "Rust", "Excel", "Claude", "Scala"}
+PARTIAL_CREDIT = 0.5
+# Families whose members can substitute for each other (knowing Postgres means you can
+# pick up MySQL fast). Languages, soft skills, etc. don't get partial credit.
+SUBSTITUTES = {"relational database", "nosql database", "frontend", "backend", "cloud provider",
+               "bi tool", "mdm", "itsm tool", "ml framework", "ci tool", "testing"}
 
 
 @lru_cache(maxsize=1)
-def get_nlp():
-    """Load the spaCy English model once and reuse it (loading is slow)."""
-    try:
-        return spacy.load("en_core_web_sm")
-    except OSError:
-        # Model not downloaded: fall back to a blank pipeline so the app still runs.
-        nlp = spacy.blank("en")
-        return nlp
-
-
-@lru_cache(maxsize=1)
-def load_skills() -> tuple[str, ...]:
-    lines = SKILLS_FILE.read_text(encoding="utf-8").splitlines()
-    return tuple(s.strip() for s in lines if s.strip() and not s.startswith("#"))
-
-
-@lru_cache(maxsize=1)
-def get_matcher() -> PhraseMatcher:
+def matchers():
     nlp = get_nlp()
-    matcher = PhraseMatcher(nlp.vocab, attr="LOWER")  # case-insensitive
-    matcher.add("SKILL", [nlp.make_doc(s) for s in load_skills()])
-    return matcher
-
-
-def _canonical(term: str) -> str:
-    """Map matched text back to the dictionary's spelling ("python" -> "Python")."""
-    lookup = {s.lower(): s for s in load_skills()}
-    return lookup.get(term.lower(), term)
+    lower = PhraseMatcher(nlp.vocab, attr="LOWER")
+    exact = PhraseMatcher(nlp.vocab, attr="ORTH")
+    lemma = PhraseMatcher(nlp.vocab, attr="LEMMA")
+    for skill, info in ONTOLOGY.items():
+        terms = [skill] + info["aliases"]
+        for term in terms:
+            if term in CASE_SENSITIVE or (len(term) <= 2 and term[:1].isupper()):
+                exact.add(skill, [nlp.make_doc(term)])
+            else:
+                lower.add(skill, [nlp.make_doc(term)])
+                if term.islower() and term.replace(" ", "").replace("-", "").isalpha():
+                    lemma.add(skill, [nlp(term)])   # needs lemmas, so run the pipeline
+    return lower, exact, lemma
 
 
 def find_skills(text: str) -> set[str]:
-    """Return dictionary skills that appear in the text."""
     nlp = get_nlp()
-    doc = nlp.make_doc(text)
-    return {_canonical(doc[s:e].text) for _, s, e in get_matcher()(doc)}
+    doc = nlp(text)
+    found = set()
+    for m in matchers():
+        for match_id, _, _ in m(doc):
+            found.add(nlp.vocab.strings[match_id])
+    return found
 
 
-def find_phrases(text: str, limit: int = 25) -> list[str]:
-    """Return frequent noun phrases / entities from a job description.
-
-    Only works when the full spaCy model is installed (blank pipelines have no parser).
-    """
-    nlp = get_nlp()
-    if "parser" not in nlp.pipe_names:
-        return []
-    # Treat line breaks as sentence ends so headings don't merge with the next line.
-    doc = nlp(re.sub(r"\s*\n\s*", ". ", text))
-    counts: dict[str, int] = {}
-    candidates = [c.text for c in doc.noun_chunks] + [e.text for e in doc.ents
-                                                       if e.label_ in {"ORG", "PRODUCT"}]
-    for raw in candidates:
-        phrase = " ".join(raw.lower().split())  # collapse newlines/extra spaces
-        phrase = re.sub(r"^(a|an|the|our|your|their|strong|excellent|all|any)\s+", "", phrase)
-        words = phrase.split()
-        if not 1 <= len(words) <= 3 or phrase in GENERIC or len(phrase) < 3:
-            continue
-        if any(not w.replace("-", "").isalpha() for w in words):
-            continue  # skip numbers and fragments like "500 employees"
-        if all(w in GENERIC for w in words):
-            continue
-        counts[phrase] = counts.get(phrase, 0) + 1
-    ranked = sorted(counts, key=lambda p: (-counts[p], p))
-    return ranked[:limit]
+def family(skill: str) -> str:
+    return ONTOLOGY.get(skill, {}).get("family", "")
 
 
 def keyword_coverage(resume_text: str, jd_text: str) -> dict:
-    """Compare skills in the job description against skills in the resume."""
-    jd_skills = find_skills(jd_text)
+    weights = skill_weights(jd_text, find_skills)       # skill -> (weight, importance)
     resume_skills = find_skills(resume_text)
-    matched = sorted(jd_skills & resume_skills, key=str.lower)
-    missing = sorted(jd_skills - resume_skills, key=str.lower)
-    coverage = len(matched) / len(jd_skills) if jd_skills else 0.0
-
-    resume_lower = resume_text.lower()
-    skill_words = {w for s in jd_skills for w in s.lower().split()}
-    phrases = [p for p in find_phrases(jd_text)
-               if not set(p.split()) <= skill_words]  # already covered as a skill
-    missing_phrases = [p for p in phrases if p not in resume_lower]
-
+    resume_families = {family(s) for s in resume_skills}
+    matched, partial, missing = [], [], []
+    earned = total = 0.0
+    for skill, (w, importance) in sorted(weights.items(), key=lambda kv: (-kv[1][0], kv[0].lower())):
+        total += w
+        row = {"skill": skill, "importance": importance, "family": family(skill)}
+        if skill in resume_skills:
+            earned += w
+            matched.append(row)
+        elif family(skill) in resume_families and family(skill) in SUBSTITUTES:
+            earned += w * PARTIAL_CREDIT
+            similar = sorted(s for s in resume_skills if family(s) == family(skill))
+            partial.append({**row, "you_have": ", ".join(similar[:3])})
+        else:
+            missing.append(row)
     return {
-        "jd_skills": sorted(jd_skills, key=str.lower),
-        "matched": matched,
-        "missing": missing,
-        "coverage": coverage,
-        "missing_phrases": missing_phrases[:10],
+        "coverage": earned / total if total else 0.0,
+        "matched": matched, "partial": partial, "missing": missing,
+        "required_missing": [m["skill"] for m in missing if m["importance"] == "required"],
+        "resume_skills": sorted(resume_skills, key=str.lower),
     }

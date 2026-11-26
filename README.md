@@ -1,55 +1,71 @@
 # AI Resume Analyzer
 
-An NLP tool that scores how well a resume matches a job description and shows which
-ATS (applicant tracking system) keywords are missing.
+[![tests](https://github.com/HeyanshShah/resume-analyser/actions/workflows/tests.yml/badge.svg)](https://github.com/HeyanshShah/resume-analyser/actions/workflows/tests.yml)
+
+An NLP tool that scores a resume against a job posting the way both an **ATS** and a
+**recruiter** would. It goes beyond keyword counting with computational-linguistics
+techniques: synonym-aware skill matching, required-vs-preferred weighting read from the
+posting's wording, sentence embeddings, and a **dependency-parse grader for every bullet**
+that detects passive voice, weak openings, and missing impact, then rewrites them.
 
 ![screenshot](docs/screenshot.png)
 
 ## What it does
-1. **Extracts text** from a PDF resume with **PDFMiner**.
-2. **Finds skills** in both documents with **spaCy** (`PhraseMatcher` over a curated
-   skills list, plus noun-chunk extraction for role-specific phrases).
-3. **Measures meaning, not just words**: both texts are turned into
-   **sentence embeddings** (`all-MiniLM-L6-v2` via sentence-transformers) and compared
-   with **cosine similarity**. Falls back to TF-IDF if the model isn't available.
-4. **Scores** the match (60% keyword coverage + 40% semantic similarity) and generates
-   feedback: missing skills, repeated phrases you never use, and your most relevant lines.
-5. Shows everything in a **Streamlit** web app.
+| Layer | How | Example |
+|---|---|---|
+| **Extraction** | PDFMiner / python-docx, section detection, re-joins bullets that PDFs wrap across lines | finds 24 bullets under Experience/Projects |
+| **Skill matching** | 143-skill ontology with aliases + spaCy `PhraseMatcher` on lowercase, exact, and **lemma** forms | "JS" → JavaScript, "k8s" → Kubernetes, "troubleshot" → troubleshooting; the verb "go" ≠ Go language |
+| **Importance** | posting section headers + cue phrases, judged per sentence | "must know SQL" → required (1.0) · "Docker is a plus" → preferred (0.5) |
+| **Partial credit** | substitute skill families | posting wants MySQL, you have PostgreSQL → ½ credit + a tip |
+| **Meaning** | `all-MiniLM-L6-v2` sentence embeddings + cosine similarity (TF-IDF fallback) | rewards describing the same *kind* of work |
+| **Bullet linguistics** | spaCy POS tags + dependency parse | passive (`nsubjpass`/`auxpass`), weak opening, pronouns, filler, no metric, length |
+| **Rewrites** | parse-based transforms; optional Claude API rewrite | "The tickets were resolved by me" → "Resolved the tickets"; "Responsible for managing X" → "Managed X" |
+
+**Score** = 50% weighted keyword coverage + 25% semantic similarity + 25% bullet quality.
+
+![bullets](docs/bullets.png)
+
+## Measured accuracy
+Linguistic detectors were evaluated on hand-labeled resume bullets. The **test set was written after
+the rules were finished and never used for tuning** (the dev set was used during development).
+
+| Detector | Held-out accuracy | Precision | Recall |
+|---|---|---|---|
+| Passive voice | 97% | 100% | 83% |
+| Weak opening | 93% | 100% | 86% |
+| Quantified impact | 97% | 100% | 92% |
+
+Reproduce: `python eval/evaluate_bullets.py test`. Known misses are printed, for example the subject-less
+passive "Passwords were reset for faculty", and "Took part in" as a weak phrase.
 
 ## Tech stack
-Python · Streamlit · PDFMiner · spaCy · sentence-transformers · scikit-learn · NumPy · pytest
+Python · spaCy (PhraseMatcher, POS tagging, dependency parsing, lemmatization) · sentence-transformers ·
+scikit-learn · PDFMiner · python-docx · Streamlit · Anthropic API (optional) · pytest · GitHub Actions
 
 ## Run it
 ```bash
-python -m venv .venv
-# Windows: .venv\Scripts\activate     Mac/Linux: source .venv/bin/activate
 pip install -r requirements.txt
 python -m spacy download en_core_web_sm
-streamlit run app.py
+streamlit run app.py                                   # web app
+python -m analyzer resume.pdf job.txt --json out.json  # command line
 ```
-Open http://localhost:8501, upload `sample_data/sample_resume.pdf`, and paste
-`sample_data/job_description.txt`.
-
-## Deploy
-Includes `render.yaml` for one-click deploy on Render (free tier uses the TF-IDF fallback).
+Optional AI rewrites: `pip install anthropic`, then set `ANTHROPIC_API_KEY`. The prompt forbids
+inventing facts and inserts `[X%]` placeholders instead.
 
 ## Tests
-```bash
-pytest
-```
+`pytest` runs 22 tests: synonyms, lemma matching, case-sensitive short names, required/preferred
+detection, partial credit, every bullet check, passive→active rewriting, past-tense inflection,
+bullet extraction, and an **accuracy floor on the held-out set**. GitHub Actions runs them on every push.
 
-## Project layout
+## Layout
 ```
-app.py                 Streamlit UI
-analyzer/extract.py    PDF/TXT -> clean text (PDFMiner)
-analyzer/keywords.py   skill + phrase extraction (spaCy)
-analyzer/similarity.py embeddings + cosine similarity (TF-IDF fallback)
-analyzer/scoring.py    combined score + feedback
-analyzer/skills.txt    skills dictionary (edit to add more)
-tests/                 pytest unit tests
+analyzer/extract.py       file -> text -> sections -> bullets
+analyzer/ontology.json    143 skills, aliases, families
+analyzer/keywords.py      synonym + lemma matching, weighted coverage, partial credit
+analyzer/requirements.py  required vs preferred from headers and cue phrases
+analyzer/similarity.py    embeddings / TF-IDF, most relevant lines
+analyzer/bullets.py       linguistic grader + rule-based rewriter
+analyzer/rewrite.py       optional Claude rewriter
+analyzer/scoring.py       overall score + prioritized feedback
+eval/                     labeled dev/test sets + evaluation script
 ```
-
-## Ideas for next steps
-- Suggest rewritten bullets using an LLM
-- Support .docx resumes
-- Weight "required" skills higher than "nice to have"

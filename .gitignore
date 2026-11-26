@@ -1,11 +1,6 @@
 __pycache__/
 *.pyc
-*.pyo
-*.pyd
-.pytest_cache/
 .venv/
 venv/
-.env
+.pytest_cache/
 .DS_Store
-*.log
-tmp_resume_upload

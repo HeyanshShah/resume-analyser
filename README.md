@@ -1,138 +1,55 @@
-# Resume Analyzer
+# AI Resume Analyzer
 
-A portfolio-ready resume matching tool that compares a resume against a job description and highlights skill alignment, gaps, and estimated keyword coverage.
+An NLP tool that scores how well a resume matches a job description and shows which
+ATS (applicant tracking system) keywords are missing.
 
-The score is a transparent keyword-based heuristic, not an AI model or an automated hiring decision. Scanned PDFs require OCR and may not yield extractable text.
+![screenshot](docs/screenshot.png)
 
-## Project Overview
+## What it does
+1. **Extracts text** from a PDF resume with **PDFMiner**.
+2. **Finds skills** in both documents with **spaCy** (`PhraseMatcher` over a curated
+   skills list, plus noun-chunk extraction for role-specific phrases).
+3. **Measures meaning, not just words**: both texts are turned into
+   **sentence embeddings** (`all-MiniLM-L6-v2` via sentence-transformers) and compared
+   with **cosine similarity**. Falls back to TF-IDF if the model isn't available.
+4. **Scores** the match (60% keyword coverage + 40% semantic similarity) and generates
+   feedback: missing skills, repeated phrases you never use, and your most relevant lines.
+5. Shows everything in a **Streamlit** web app.
 
-This project was built to simulate a practical hiring workflow: a recruiter or candidate can paste a resume and job description, and the app calculates how well the resume matches the role based on relevant technical skills and keywords.
+## Tech stack
+Python · Streamlit · PDFMiner · spaCy · sentence-transformers · scikit-learn · NumPy · pytest
 
-It is designed as a lightweight, real-world prototype for ATS-style scoring and can be extended into a more advanced hiring analytics tool.
-
-## Key Features
-
-- Resume vs job description matching
-- Skill extraction for technical keywords
-- Weighted relevance scoring
-- Coverage analysis and missing-skill detection
-- Resume upload support for text-based formats and common document files
-- Clean web interface built with Flask
-- Automated tests for scoring reliability
-
-## Tech Stack
-
-- Python
-- Flask
-- PyPDF2
-- python-docx
-- Pytest
-
-## Project Structure
-
+## Run it
 ```bash
-resume-analyzer/
-├── app.py
-├── main.py
-├── requirements.txt
-├── README.md
-├── LICENSE
-├── sample_resume.txt
-├── sample_job_description.txt
-├── resume_analyzer/
-│   ├── __init__.py
-│   └── analyzer.py
-├── tests/
-│   └── test_analyzer.py
-└── .gitignore
+python -m venv .venv
+# Windows: .venv\Scripts\activate     Mac/Linux: source .venv/bin/activate
+pip install -r requirements.txt
+python -m spacy download en_core_web_sm
+streamlit run app.py
 ```
+Open http://localhost:8501, upload `sample_data/sample_resume.pdf`, and paste
+`sample_data/job_description.txt`.
 
-## How It Works
+## Deploy
+Includes `render.yaml` for one-click deploy on Render (free tier uses the TF-IDF fallback).
 
-1. The app reads the resume text and job description.
-2. It extracts relevant skill keywords and common technical terms.
-3. It compares the resume skills against the required job skills.
-4. It calculates a match score and shows missing skills.
-5. It presents a recruiter-friendly result summary.
-
-## Local Setup
-
-### 1. Clone the project
-
+## Tests
 ```bash
-git clone https://github.com/HeyanshShah/resume-analyser.git
-cd resume-analyser
+pytest
 ```
 
-### 2. Install dependencies
-
-```bash
-python -m pip install -r requirements.txt
+## Project layout
+```
+app.py                 Streamlit UI
+analyzer/extract.py    PDF/TXT -> clean text (PDFMiner)
+analyzer/keywords.py   skill + phrase extraction (spaCy)
+analyzer/similarity.py embeddings + cosine similarity (TF-IDF fallback)
+analyzer/scoring.py    combined score + feedback
+analyzer/skills.txt    skills dictionary (edit to add more)
+tests/                 pytest unit tests
 ```
 
-### 3. Run the app
-
-```bash
-python app.py
-```
-
-Then open:
-
-```text
-http://127.0.0.1:5000
-```
-
-### 4. Run tests
-
-```bash
-python -m pytest -q
-```
-
-## Sample Usage
-
-```python
-from resume_analyzer import score_resume
-
-summary, score = score_resume(
-    "Experienced Python developer with Flask, SQL, REST APIs, and Docker.",
-    "Looking for Python, Flask, SQL, REST APIs, Docker, and Agile experience."
-)
-
-print(score)
-print(summary)
-```
-
-## Example Output
-
-```json
-{
-  "score": 75,
-  "matched_skills": ["python", "flask", "sql", "docker", "rest"],
-  "missing_skills": ["project management"]
-}
-```
-
-## Screenshots
-
-This project is intended to be used via a browser-based dashboard with:
-- resume text input
-- file upload support
-- score summary
-- matched and missing skill lists
-- downloadable result report
-
-## Future Enhancements
-
-- Multi-file comparison for multiple candidates
-- Better resume parsing using NLP and Named Entity Recognition
-- Stronger weighting for experience, education, certifications, and tools
-- Deployment to a hosted web app
-- CSV export and recruiter dashboard analytics
-
-## License
-
-This project is licensed under the MIT License. See [LICENSE](LICENSE) for details.
-
-## Author
-
-Heyansh Shah
+## Ideas for next steps
+- Suggest rewritten bullets using an LLM
+- Support .docx resumes
+- Weight "required" skills higher than "nice to have"

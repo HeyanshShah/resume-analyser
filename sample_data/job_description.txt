@@ -1,0 +1,16 @@
+IT Support Intern (Summer 2027)
+
+We're looking for an IT Support Intern to help our team keep 500 employees productive.
+
+Responsibilities
+- Troubleshoot hardware, software, and network issues on Windows and macOS devices
+- Manage user accounts in Active Directory and Microsoft 365, including MFA resets
+- Triage and resolve tickets in ServiceNow within SLA
+- Write knowledge base articles and documentation
+- Automate repetitive tasks with PowerShell or Python
+
+Requirements
+- Pursuing a degree in Computer Science, IT, or a related field
+- Understanding of networking fundamentals: TCP/IP, DNS, DHCP, VPN
+- Strong communication and customer service skills
+- Bonus: experience with Intune, Jamf, or ITIL
